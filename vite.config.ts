@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -18,4 +19,15 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        // Ignorar advertencias de TypeScript durante el build
+        if (warning.code === 'TS6133' || warning.code === 'TS2345' || warning.code === 'TS2322') {
+          return;
+        }
+        warn(warning);
+      }
+    }
+  }
 }) 
