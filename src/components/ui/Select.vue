@@ -85,45 +85,35 @@
           </div>
 
           <!-- Opciones -->
-          <template v-for="(group, index) in filteredOptions" :key="index">
-            <!-- Grupo -->
-            <div v-if="group.group" class="px-3 py-2">
-              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                {{ group.group }}
-              </div>
-            </div>
-
-            <!-- Opciones del grupo -->
-            <div
-              v-for="option in group.options"
-              :key="option.value"
+          <div
+            v-for="option in filteredOptions"
+            :key="option.value"
+            :class="[
+              'cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50',
+              {
+                'bg-indigo-50': isSelected(option.value),
+              },
+            ]"
+            @click="selectOption(option)"
+          >
+            <span
               :class="[
-                'cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50',
+                'block truncate',
                 {
-                  'bg-indigo-50': isSelected(option.value),
+                  'font-semibold': isSelected(option.value),
+                  'font-normal': !isSelected(option.value),
                 },
               ]"
-              @click="selectOption(option)"
             >
-              <span
-                :class="[
-                  'block truncate',
-                  {
-                    'font-semibold': isSelected(option.value),
-                    'font-normal': !isSelected(option.value),
-                  },
-                ]"
-              >
-                {{ option.label }}
-              </span>
-              <span
-                v-if="isSelected(option.value)"
-                class="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600"
-              >
-                <CheckIcon class="h-5 w-5" />
-              </span>
-            </div>
-          </template>
+              {{ option.label }}
+            </span>
+            <span
+              v-if="isSelected(option.value)"
+              class="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600"
+            >
+              <CheckIcon class="h-5 w-5" />
+            </span>
+          </div>
 
           <!-- Sin resultados -->
           <div
@@ -149,7 +139,6 @@ import { ChevronUpDownIcon, CheckIcon } from '@heroicons/vue/24/outline';
 interface Option {
   value: string | number;
   label: string;
-  group?: string;
 }
 
 interface Props {
@@ -241,7 +230,7 @@ const checkMobile = () => {
 onMounted(() => {
   checkMobile();
   window.addEventListener('resize', checkMobile);
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', () => {
     if (isOpen.value) {
       isOpen.value = false;
     }

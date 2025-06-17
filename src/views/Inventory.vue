@@ -221,6 +221,7 @@
             v-model="newProduct.category_id"
             :options="categories"
             label="Categoría"
+            required
           />
           <Input
             id="new-product-sku"
@@ -252,7 +253,6 @@
             <Input
               id="new-product-description"
               v-model="newProduct.description"
-              type="textarea"
               label="Descripción"
             />
           </div>
@@ -289,7 +289,6 @@
         <Input
           id="new-category-description"
           v-model="newCategory.description"
-          type="textarea"
           label="Descripción"
         />
         <div class="flex justify-end space-x-4">
@@ -427,7 +426,8 @@ import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Modal from '@/components/ui/Modal.vue';
 import type { Product } from '@/types/product';
-import type { Category, Movement, ProductForm, CategoryForm, MovementForm } from '@/types/inventory';
+import type { Category, Movement, CategoryForm, MovementForm } from '@/types/inventory';
+import type { ProductForm } from '@/types/product';
 
 const errorStore = useErrorStore();
 
@@ -444,7 +444,7 @@ const saving = ref(false);
 // Filtros
 const filters = ref({
   search: '',
-  category: null as string | null,
+  category: '',
   showLowStock: false,
   showInactive: false,
 });
@@ -457,7 +457,7 @@ const showMovementsModal = ref(false);
 // Formularios
 const newProduct = ref<ProductForm>({
   name: '',
-  category_id: null,
+  category_id: '',
   sku: '',
   price: 0,
   stock: 0,

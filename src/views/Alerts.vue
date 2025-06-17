@@ -208,7 +208,7 @@ const handleNewAlert = (event: CustomEvent) => {
 };
 
 // Marcar alertas como leídas
-const markAsRead = async (alertId: number) => {
+const markAsRead = async (alertId: string) => {
   try {
     await api.put(`/inventory/alerts/${alertId}/read`);
     const alert = alerts.value.find((a: any) => a.id === alertId);
@@ -235,7 +235,7 @@ const markAllAsRead = async () => {
 
 // Utilidades
 const getAlertTypeLabel = (type: string) => {
-  const types = {
+  const types: Record<string, string> = {
     low_stock: 'Stock Bajo',
     expiring: 'Producto por Vencer',
     system: 'Sistema',

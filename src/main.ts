@@ -14,13 +14,13 @@ app.use(router)
 app.mount('#app')
 
 // Configuración de errores globales
-app.config.errorHandler = (err, vm, info) => {
+app.config.errorHandler = (err, _vm, info) => {
   console.error('Error global:', err)
   console.error('Info:', info)
 }
 
 // Configuración de advertencias globales
-app.config.warnHandler = (msg, vm, trace) => {
+app.config.warnHandler = (msg, _vm, trace) => {
   console.warn('Advertencia global:', msg)
   console.warn('Trace:', trace)
 } 

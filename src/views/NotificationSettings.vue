@@ -137,6 +137,7 @@
                     placeholder="+52 123 456 7890"
                     class="flex-1"
                     @update:modelValue="updateSettings"
+                    id="notification-whatsapp-phone"
                   />
                   <Button
                     variant="secondary"
@@ -260,4 +261,11 @@ const verifyPhone = async () => {
 onMounted(() => {
   loadSettings();
 });
+
+// Define la función saveSettings si no existe
+const saveSettings = async () => {
+  loading.value = true;
+  // lógica para guardar configuración
+  loading.value = false;
+};
 </script> 

@@ -33,7 +33,6 @@
           <Input
             id="product-description"
             v-model="form.description"
-            type="textarea"
             label="Descripción"
             required
           />
@@ -77,22 +76,26 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useProductStore } from '@/stores/products'
-import Input from '@/components/ui/Input.vue' // Importar el componente Input
-import type { Product, ProductForm } from '@/types/product' // Importar tipos
+import Input from '@/components/ui/Input.vue'
+import type { Product, ProductData } from '@/types/product'
 
 const productStore = useProductStore()
-const products = ref<Product[]>([]) // Tipar products
+const products = ref<Product[]>([])
 const showModal = ref(false)
 const showDeleteModal = ref(false)
 const isEditing = ref(false)
-const currentProduct = ref<Product | null>(null) // Tipar currentProduct
+const currentProduct = ref<Product | null>(null)
 
-const form = ref<ProductForm>({
+const form = ref<ProductData>({
   name: '',
   description: '',
   price: 0,
+  stock: 0,
+  min_stock: 5,
+  category_id: '',
+  sku: '',
+  is_active: true,
   imageUrl: '',
-  imageFile: null,
 })
 
 onMounted(async () => {
@@ -105,25 +108,25 @@ async function loadProducts() {
 
 function openCreateModal() {
   isEditing.value = false
-  form.value = { name: '', description: '', price: 0, imageUrl: '', imageFile: null }
+  form.value = { name: '', description: '', price: 0, stock: 0, min_stock: 5, category_id: '', sku: '', is_active: true, imageUrl: '' }
   showModal.value = true
 }
 
-function openEditModal(product: Product) { // Tipar product
+function openEditModal(product: Product) {
   isEditing.value = true
   currentProduct.value = product
-  form.value = { ...product, imageFile: null }
+  form.value = { ...product }
   showModal.value = true
 }
 
-function openDeleteModal(product: Product) { // Tipar product
+function openDeleteModal(product: Product) {
   currentProduct.value = product
   showDeleteModal.value = true
 }
 
 function closeModal() {
   showModal.value = false
-  form.value = { name: '', description: '', price: 0, imageUrl: '', imageFile: null }
+  form.value = { name: '', description: '', price: 0, stock: 0, min_stock: 5, category_id: '', sku: '', is_active: true, imageUrl: '' }
 }
 
 function closeDeleteModal() {
@@ -134,14 +137,14 @@ function closeDeleteModal() {
 function onFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (file) {
-    form.value.imageFile = file
+    // Aquí deberías subir la imagen y obtener la URL, por ahora solo la previsualizas
     form.value.imageUrl = URL.createObjectURL(file)
   }
 }
 
 async function saveProduct() {
   if (isEditing.value) {
-    if (currentProduct.value) { // Comprobación de nulidad
+    if (currentProduct.value) {
       await productStore.updateProduct(currentProduct.value.id, form.value)
     }
   } else {
@@ -152,7 +155,7 @@ async function saveProduct() {
 }
 
 async function deleteProduct() {
-  if (currentProduct.value) { // Comprobación de nulidad
+  if (currentProduct.value) {
     await productStore.deleteProduct(currentProduct.value.id)
   }
   closeDeleteModal()

@@ -15,16 +15,6 @@ export interface Movement {
   created_at: string;
 }
 
-export interface ProductForm {
-  name: string;
-  category_id: string | null;
-  sku: string;
-  price: number;
-  stock: number;
-  min_stock: number;
-  description: string;
-}
-
 export interface CategoryForm {
   name: string;
   description: string;
