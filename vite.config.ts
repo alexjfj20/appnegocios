@@ -18,16 +18,5 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-  },
-  build: {
-    rollupOptions: {
-      onwarn(warning, warn) {
-        // Ignorar advertencias de TypeScript durante el build
-        if (warning.code === 'TS6133' || warning.code === 'TS2345' || warning.code === 'TS2322') {
-          return;
-        }
-        warn(warning);
-      }
-    }
   }
 }) 
