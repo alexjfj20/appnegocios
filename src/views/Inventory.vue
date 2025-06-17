@@ -412,13 +412,14 @@ import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Modal from '@/components/ui/Modal.vue';
+import type { Product } from '@/types/product';
 
 const errorStore = useErrorStore();
 
 // Estado
-const products = ref([]);
-const categories = ref([]);
-const movements = ref([]);
+const products = ref<Product[]>([]);
+const categories = ref<{ value: string; label: string }[]>([]);
+const movements = ref<any[]>([]);
 const currentPage = ref(1);
 const total = ref(0);
 const totalPages = ref(0);
@@ -428,7 +429,7 @@ const saving = ref(false);
 // Filtros
 const filters = ref({
   search: '',
-  category: null,
+  category: null as string | null,
   showLowStock: false,
   showInactive: false,
 });
@@ -441,7 +442,7 @@ const showMovementsModal = ref(false);
 // Formularios
 const newProduct = ref({
   name: '',
-  category_id: null,
+  category_id: null as string | null,
   sku: '',
   price: 0,
   stock: 0,
@@ -459,6 +460,9 @@ const newMovement = ref({
   quantity: 0,
   notes: '',
 });
+
+// Utilidades
+const selectedProduct = ref<Product | null>(null);
 
 // Cargar datos
 const loadProducts = async () => {
@@ -551,8 +555,6 @@ const saveMovement = async () => {
 };
 
 // Utilidades
-const selectedProduct = ref(null);
-
 const editProduct = (product: any) => {
   newProduct.value = { ...product };
   showNewProductModal.value = true;
@@ -564,7 +566,7 @@ const showMovements = (product: any) => {
   loadMovements(product.id);
 };
 
-const getCategoryName = (categoryId: number) => {
+const getCategoryName = (categoryId: string | null) => {
   const category = categories.value.find((c) => c.value === categoryId);
   return category ? category.label : '';
 };

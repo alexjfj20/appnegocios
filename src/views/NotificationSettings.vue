@@ -172,14 +172,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useErrorStore } from '@/stores/error';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 import api from '@/plugins/axios';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Switch from '@/components/ui/Switch.vue';
 
 const errorStore = useErrorStore();
-const userStore = useUserStore();
+const authStore = useAuthStore();
 
 // Estado
 const loading = ref(false);

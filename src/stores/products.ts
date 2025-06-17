@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import type { Product, ProductData } from '@/types/product'
 
 export const useProductStore = defineStore('products', {
   state: () => ({
-    products: [],
+    products: [] as Product[],
     loading: false,
-    error: null,
+    error: null as string | null,
   }),
 
   actions: {
@@ -23,7 +24,7 @@ export const useProductStore = defineStore('products', {
       }
     },
 
-    async createProduct(productData) {
+    async createProduct(productData: ProductData) {
       this.loading = true
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, productData)
@@ -37,7 +38,7 @@ export const useProductStore = defineStore('products', {
       }
     },
 
-    async updateProduct(id, productData) {
+    async updateProduct(id: string, productData: Partial<ProductData>) {
       this.loading = true
       try {
         const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/products/${id}`, productData)
@@ -54,7 +55,7 @@ export const useProductStore = defineStore('products', {
       }
     },
 
-    async deleteProduct(id) {
+    async deleteProduct(id: string) {
       this.loading = true
       try {
         await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}`)

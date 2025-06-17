@@ -55,10 +55,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import type { Order } from '@/types/order'
 
-const orders = ref([])
+const orders = ref<Order[]>([])
 const loading = ref(true)
-const selectedOrder = ref(null)
+const selectedOrder = ref<Order | null>(null)
 
 onMounted(async () => {
   try {
@@ -71,7 +72,7 @@ onMounted(async () => {
   }
 })
 
-function viewOrderDetails(order) {
+function viewOrderDetails(order: Order) {
   selectedOrder.value = order
 }
 </script> 

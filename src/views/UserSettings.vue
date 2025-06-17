@@ -183,11 +183,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useToast } from 'vue-toastification';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
-
-const toast = useToast();
-const loading = ref(false);
 
 const userInfo = ref({
   name: '',

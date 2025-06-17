@@ -153,12 +153,13 @@ import { useErrorStore } from '@/stores/error';
 import { useWebSocket } from '@/plugins/websocket';
 import api from '@/plugins/axios';
 import Button from '@/components/ui/Button.vue';
+import type { Alert } from '@/types/alert';
 
 const errorStore = useErrorStore();
 const { connect, disconnect } = useWebSocket();
 
 // Estado
-const alerts = ref([]);
+const alerts = ref<Alert[]>([]);
 const loading = ref(false);
 const currentPage = ref(1);
 const total = ref(0);

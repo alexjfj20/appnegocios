@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 import { useErrorStore } from '@/stores/error';
 
 const firebaseConfig = {
@@ -26,7 +26,7 @@ export const initializeFirebase = async () => {
       });
 
       // Registrar token en el backend
-      const userStore = useUserStore();
+      const userStore = useAuthStore();
       const errorStore = useErrorStore();
 
       if (userStore.isAuthenticated) {
