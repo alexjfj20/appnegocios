@@ -30,14 +30,14 @@
       <div class="flex space-x-4 mb-6">
         <div class="flex-1">
           <input
-            v-model="search"
+            v-model="searchQuery"
             type="text"
             placeholder="Buscar productos..."
             class="input w-full"
             @input="filterProducts"
           />
         </div>
-        <select v-model="category" class="input" @change="filterProducts">
+        <select v-model="selectedCategory" class="input" @change="filterProducts">
           <option value="">Todas las categorías</option>
           <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
         </select>
@@ -117,10 +117,11 @@ const store = ref({
   whatsapp: '',
 })
 const products = ref<Product[]>([])
-const search = ref('')
-const category = ref('')
-const showCart = ref(false)
 const categories = ref<string[]>([])
+const selectedCategory = ref<string>('all')
+const searchQuery = ref('')
+const showCart = ref(false)
+const loading = ref(false)
 
 const whatsappLink = computed(() => {
   return `https://wa.me/${store.value.whatsapp}?text=Hola, me gustaría hacer una consulta sobre tus productos.`
@@ -128,9 +129,9 @@ const whatsappLink = computed(() => {
 
 const filteredProducts = computed(() => {
   return products.value.filter((product: Product) => {
-    const matchesSearch = product.name.toLowerCase().includes(search.value.toLowerCase()) ||
-                         product.description.toLowerCase().includes(search.value.toLowerCase())
-    const matchesCategory = !category.value || product.category_id === category.value
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                         product.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesCategory = !selectedCategory.value || product.category_id === selectedCategory.value
     return matchesSearch && matchesCategory
   })
 })
@@ -154,9 +155,15 @@ function filterProducts() {
   // La lógica de filtrado se maneja en el computed filteredProducts
 }
 
-function addToCart(product: Product) {
-  cart.addItem(product)
-  showCart.value = true
+const addToCart = (product: Product) => {
+  cart.addItem({
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    imageUrl: product.imageUrl || '',
+    quantity: 1
+  })
 }
 
 function updateQuantity(id: string, quantity: number) {

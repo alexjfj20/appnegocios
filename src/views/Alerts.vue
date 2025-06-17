@@ -235,17 +235,26 @@ const markAllAsRead = async () => {
 
 // Utilidades
 const getAlertTypeLabel = (type: string) => {
-  const types: Record<string, string> = {
+  const mensajes: Record<string, string> = {
     low_stock: 'Stock Bajo',
-    expiring: 'Producto por Vencer',
-    system: 'Sistema',
-  };
-  return types[type] || type;
+    expiring: 'Por Vencer',
+    system: 'Error del Sistema'
+  }
+  return mensajes[type] || type
 };
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleString();
 };
+
+const deleteAlert = async (alert: Alert) => {
+  try {
+    await api.delete(`/alerts/${Number(alert.id)}`)
+    await loadAlerts()
+  } catch (error) {
+    console.error('Error al eliminar alerta:', error)
+  }
+}
 
 // Inicialización
 onMounted(() => {

@@ -527,7 +527,11 @@ const loadMovements = async (productId: string) => {
 const saveProduct = async () => {
   try {
     saving.value = true;
-    await api.post('/inventory/products', newProduct.value);
+    if (selectedProduct.value) {
+      await api.put(`/inventory/products/${selectedProduct.value.id}`, newProduct.value);
+    } else {
+      await api.post('/inventory/products', newProduct.value);
+    }
     showNewProductModal.value = false;
     loadProducts();
     errorStore.showNotification('success', 'Producto guardado correctamente');
@@ -573,18 +577,18 @@ const saveMovement = async () => {
 
 // Utilidades
 const editProduct = (product: Product) => {
+  selectedProduct.value = product
   newProduct.value = {
     name: product.name,
-    category_id: product.category_id,
-    sku: product.sku,
+    description: product.description || '',
     price: product.price,
     stock: product.stock,
     min_stock: product.min_stock,
-    description: product.description,
-    is_active: product.is_active,
-    imageUrl: product.imageUrl,
-  };
-  showNewProductModal.value = true;
+    category_id: product.category_id,
+    sku: product.sku,
+    is_active: product.is_active
+  }
+  showNewProductModal.value = true
 };
 
 const showMovements = (product: Product) => {
@@ -598,13 +602,13 @@ const getCategoryName = (categoryId: string) => {
   return category ? category.label : '';
 };
 
-const getMovementTypeLabel = (type: 'entry' | 'exit' | 'adjustment') => {
-  const types: Record<string, string> = {
+const getMovementTypeLabel = (type: string) => {
+  const mensajes: Record<string, string> = {
     entry: 'Entrada',
     exit: 'Salida',
-    adjustment: 'Ajuste',
-  };
-  return types[type] || type;
+    adjustment: 'Ajuste'
+  }
+  return mensajes[type] || type
 };
 
 const formatDate = (date: string) => {

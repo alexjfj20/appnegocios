@@ -71,13 +71,17 @@ const router = createRouter({
 })
 
 // Guardia de navegación
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to) => {
   const authStore = useAuthStore()
-
+  
+  // Si la ruta requiere autenticación
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'home' })
-  } else {
-    next()
+    return '/login'
+  }
+  
+  // Si el usuario está autenticado y va a login/register, redirigir al dashboard
+  if (authStore.isAuthenticated && (to.path === '/login' || to.path === '/register')) {
+    return '/dashboard'
   }
 })
 

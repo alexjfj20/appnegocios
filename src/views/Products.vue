@@ -76,6 +76,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useProductStore } from '@/stores/products'
+import Button from '@/components/ui/Button.vue'
+import Modal from '@/components/ui/Modal.vue'
 import Input from '@/components/ui/Input.vue'
 import type { Product, ProductData } from '@/types/product'
 
@@ -85,6 +87,8 @@ const showModal = ref(false)
 const showDeleteModal = ref(false)
 const isEditing = ref(false)
 const currentProduct = ref<Product | null>(null)
+const loading = ref(false)
+const saving = ref(false)
 
 const form = ref<ProductData>({
   name: '',
@@ -102,8 +106,15 @@ onMounted(async () => {
   await loadProducts()
 })
 
-async function loadProducts() {
-  products.value = await productStore.fetchProducts()
+const loadProducts = async () => {
+  try {
+    loading.value = true
+    products.value = await productStore.fetchProducts()
+  } catch (error) {
+    console.error('Error al cargar productos:', error)
+  } finally {
+    loading.value = false
+  }
 }
 
 function openCreateModal() {

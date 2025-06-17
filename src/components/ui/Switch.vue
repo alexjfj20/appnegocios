@@ -24,6 +24,8 @@ import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps<{
   modelValue: boolean;
+  disabled?: boolean;
+  label?: string;
 }>();
 
 const emit = defineEmits<{

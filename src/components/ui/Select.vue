@@ -165,7 +165,7 @@ const props = withDefaults(defineProps<Props>(), {
   multiple: false,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'change']);
 
 // Estado
 const isOpen = ref(false);
@@ -198,6 +198,10 @@ const selectedLabel = computed(() => {
   return selected?.label;
 });
 
+const selectedOption = computed(() => {
+  return props.options.find(option => option.value === props.modelValue)
+})
+
 // Métodos
 const isSelected = (value: string | number) => {
   if (props.multiple) {
@@ -218,9 +222,21 @@ const selectOption = (option: Option) => {
     emit('update:modelValue', currentValue);
   } else {
     emit('update:modelValue', option.value);
+    emit('change', option.value)
     isOpen.value = false;
   }
 };
+
+const handleSelect = (option: Option) => {
+  emit('update:modelValue', option.value)
+  emit('change', option.value)
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    isOpen.value = false
+  }
+}
 
 // Detectar dispositivo móvil
 const checkMobile = () => {

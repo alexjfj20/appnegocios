@@ -158,7 +158,7 @@
         <!-- Guardar Cambios -->
         <div class="flex justify-end">
           <Button
-            @click="saveSettings"
+            @click="updateSettings"
             :loading="saving"
             :disabled="!hasChanges"
           >
