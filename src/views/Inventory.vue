@@ -16,11 +16,13 @@
     <div class="bg-white rounded-lg shadow p-4 mb-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Input
+          id="filter-search"
           v-model="filters.search"
           placeholder="Buscar productos..."
           @input="loadProducts"
         />
         <Select
+          id="filter-category"
           v-model="filters.category"
           :options="categories"
           placeholder="Filtrar por categoría"
@@ -209,32 +211,38 @@
       <form @submit.prevent="saveProduct" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
+            id="new-product-name"
             v-model="newProduct.name"
             label="Nombre"
             required
           />
           <Select
+            id="new-product-category"
             v-model="newProduct.category_id"
             :options="categories"
             label="Categoría"
           />
           <Input
+            id="new-product-sku"
             v-model="newProduct.sku"
             label="SKU"
           />
           <Input
+            id="new-product-price"
             v-model="newProduct.price"
             type="number"
             label="Precio"
             required
           />
           <Input
+            id="new-product-stock"
             v-model="newProduct.stock"
             type="number"
             label="Stock Inicial"
             required
           />
           <Input
+            id="new-product-min-stock"
             v-model="newProduct.min_stock"
             type="number"
             label="Stock Mínimo"
@@ -242,6 +250,7 @@
           />
           <div class="md:col-span-2">
             <Input
+              id="new-product-description"
               v-model="newProduct.description"
               type="textarea"
               label="Descripción"
@@ -272,11 +281,13 @@
     >
       <form @submit.prevent="saveCategory" class="space-y-4">
         <Input
+          id="new-category-name"
           v-model="newCategory.name"
           label="Nombre"
           required
         />
         <Input
+          id="new-category-description"
           v-model="newCategory.description"
           type="textarea"
           label="Descripción"
@@ -309,6 +320,7 @@
         <form @submit.prevent="saveMovement" class="bg-gray-50 p-4 rounded-lg">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Select
+              id="new-movement-type"
               v-model="newMovement.type"
               :options="[
                 { value: 'entry', label: 'Entrada' },
@@ -319,12 +331,14 @@
               required
             />
             <Input
+              id="new-movement-quantity"
               v-model="newMovement.quantity"
               type="number"
               label="Cantidad"
               required
             />
             <Input
+              id="new-movement-notes"
               v-model="newMovement.notes"
               label="Notas"
             />
@@ -413,13 +427,14 @@ import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Modal from '@/components/ui/Modal.vue';
 import type { Product } from '@/types/product';
+import type { Category, Movement, ProductForm, CategoryForm, MovementForm } from '@/types/inventory';
 
 const errorStore = useErrorStore();
 
 // Estado
 const products = ref<Product[]>([]);
 const categories = ref<{ value: string; label: string }[]>([]);
-const movements = ref<any[]>([]);
+const movements = ref<Movement[]>([]);
 const currentPage = ref(1);
 const total = ref(0);
 const totalPages = ref(0);
@@ -440,9 +455,9 @@ const showNewCategoryModal = ref(false);
 const showMovementsModal = ref(false);
 
 // Formularios
-const newProduct = ref({
+const newProduct = ref<ProductForm>({
   name: '',
-  category_id: null as string | null,
+  category_id: null,
   sku: '',
   price: 0,
   stock: 0,
@@ -450,12 +465,12 @@ const newProduct = ref({
   description: '',
 });
 
-const newCategory = ref({
+const newCategory = ref<CategoryForm>({
   name: '',
   description: '',
 });
 
-const newMovement = ref({
+const newMovement = ref<MovementForm>({
   type: 'entry',
   quantity: 0,
   notes: '',
@@ -488,7 +503,7 @@ const loadProducts = async () => {
 const loadCategories = async () => {
   try {
     const response = await api.get('/inventory/categories');
-    categories.value = response.data.map((category: any) => ({
+    categories.value = response.data.map((category: Category) => ({
       value: category.id,
       label: category.name,
     }));
@@ -497,7 +512,7 @@ const loadCategories = async () => {
   }
 };
 
-const loadMovements = async (productId: number) => {
+const loadMovements = async (productId: string) => {
   try {
     const response = await api.get('/inventory/movements', {
       params: { product_id: productId },
@@ -540,11 +555,13 @@ const saveCategory = async () => {
 const saveMovement = async () => {
   try {
     saving.value = true;
-    await api.post('/inventory/movements', {
-      ...newMovement.value,
-      product_id: selectedProduct.value.id,
-    });
-    loadMovements(selectedProduct.value.id);
+    if (selectedProduct.value) {
+      await api.post('/inventory/movements', {
+        ...newMovement.value,
+        product_id: selectedProduct.value.id,
+      });
+      loadMovements(selectedProduct.value.id);
+    }
     loadProducts();
     errorStore.showNotification('success', 'Movimiento registrado correctamente');
   } catch (error) {
@@ -555,24 +572,24 @@ const saveMovement = async () => {
 };
 
 // Utilidades
-const editProduct = (product: any) => {
+const editProduct = (product: Product) => {
   newProduct.value = { ...product };
   showNewProductModal.value = true;
 };
 
-const showMovements = (product: any) => {
+const showMovements = (product: Product) => {
   selectedProduct.value = product;
   showMovementsModal.value = true;
   loadMovements(product.id);
 };
 
-const getCategoryName = (categoryId: string | null) => {
+const getCategoryName = (categoryId: string) => {
   const category = categories.value.find((c) => c.value === categoryId);
   return category ? category.label : '';
 };
 
-const getMovementTypeLabel = (type: string) => {
-  const types = {
+const getMovementTypeLabel = (type: 'entry' | 'exit' | 'adjustment') => {
+  const types: Record<string, string> = {
     entry: 'Entrada',
     exit: 'Salida',
     adjustment: 'Ajuste',

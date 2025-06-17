@@ -187,6 +187,8 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
 
+const loading = ref(false);
+
 const userInfo = ref({
   name: '',
   email: '',

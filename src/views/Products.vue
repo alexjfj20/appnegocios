@@ -24,18 +24,27 @@
       <div class="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 class="text-xl font-bold mb-4">{{ isEditing ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
         <form @submit.prevent="saveProduct" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium mb-1">Nombre</label>
-            <input v-model="form.name" type="text" class="input" required />
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Descripción</label>
-            <textarea v-model="form.description" class="input" required></textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Precio</label>
-            <input v-model.number="form.price" type="number" min="0" class="input" required />
-          </div>
+          <Input
+            id="product-name"
+            v-model="form.name"
+            label="Nombre"
+            required
+          />
+          <Input
+            id="product-description"
+            v-model="form.description"
+            type="textarea"
+            label="Descripción"
+            required
+          />
+          <Input
+            id="product-price"
+            v-model.number="form.price"
+            type="number"
+            label="Precio"
+            min="0"
+            required
+          />
           <div>
             <label class="block text-sm font-medium mb-1">Imagen</label>
             <input type="file" accept="image/*" class="input" @change="onFileChange" />
@@ -68,20 +77,22 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useProductStore } from '@/stores/products'
+import Input from '@/components/ui/Input.vue' // Importar el componente Input
+import type { Product, ProductForm } from '@/types/product' // Importar tipos
 
 const productStore = useProductStore()
-const products = ref([])
+const products = ref<Product[]>([]) // Tipar products
 const showModal = ref(false)
 const showDeleteModal = ref(false)
 const isEditing = ref(false)
-const currentProduct = ref(null)
+const currentProduct = ref<Product | null>(null) // Tipar currentProduct
 
-const form = ref({
+const form = ref<ProductForm>({
   name: '',
   description: '',
   price: 0,
   imageUrl: '',
-  imageFile: null as File | null,
+  imageFile: null,
 })
 
 onMounted(async () => {
@@ -98,14 +109,14 @@ function openCreateModal() {
   showModal.value = true
 }
 
-function openEditModal(product) {
+function openEditModal(product: Product) { // Tipar product
   isEditing.value = true
   currentProduct.value = product
   form.value = { ...product, imageFile: null }
   showModal.value = true
 }
 
-function openDeleteModal(product) {
+function openDeleteModal(product: Product) { // Tipar product
   currentProduct.value = product
   showDeleteModal.value = true
 }
@@ -130,7 +141,9 @@ function onFileChange(e: Event) {
 
 async function saveProduct() {
   if (isEditing.value) {
-    await productStore.updateProduct(currentProduct.value.id, form.value)
+    if (currentProduct.value) { // Comprobación de nulidad
+      await productStore.updateProduct(currentProduct.value.id, form.value)
+    }
   } else {
     await productStore.createProduct(form.value)
   }
@@ -139,7 +152,9 @@ async function saveProduct() {
 }
 
 async function deleteProduct() {
-  await productStore.deleteProduct(currentProduct.value.id)
+  if (currentProduct.value) { // Comprobación de nulidad
+    await productStore.deleteProduct(currentProduct.value.id)
+  }
   closeDeleteModal()
   await loadProducts()
 }

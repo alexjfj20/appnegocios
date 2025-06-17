@@ -23,4 +23,8 @@ export interface ProductData {
   sku: string;
   is_active: boolean;
   imageUrl?: string;
+}
+
+export interface ProductForm extends ProductData {
+  imageFile: File | null;
 } 
