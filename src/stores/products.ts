@@ -66,6 +66,6 @@ export const useProductStore = defineStore('products', {
       } finally {
         this.loading = false
       }
-    },
+    }
   },
 }) 

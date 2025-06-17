@@ -16,7 +16,7 @@
           :type="notification.type"
           :title="notification.message"
           :model-value="true"
-          @close="removeNotification(notification.id)"
+          @update:model-value="removeNotification(notification.id)"
         />
       </TransitionGroup>
     </div>
