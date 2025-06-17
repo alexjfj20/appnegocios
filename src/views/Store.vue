@@ -105,6 +105,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import axios from 'axios'
+import type { Product } from '@/types/product'
 
 const route = useRoute()
 const router = useRouter()
@@ -115,7 +116,7 @@ const store = ref({
   logoUrl: '',
   whatsapp: '',
 })
-const products = ref([])
+const products = ref<Product[]>([])
 const search = ref('')
 const category = ref('')
 const showCart = ref(false)
