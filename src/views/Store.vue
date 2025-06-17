@@ -107,11 +107,17 @@ import { useCartStore } from '@/stores/cart'
 import axios from 'axios'
 import type { Product } from '@/types/product'
 
+interface StoreInfo {
+  name: string;
+  logoUrl: string;
+  whatsapp: string;
+}
+
 const route = useRoute()
 const router = useRouter()
 const cart = useCartStore()
 
-const store = ref({
+const store = ref<StoreInfo>({
   name: '',
   logoUrl: '',
   whatsapp: '',

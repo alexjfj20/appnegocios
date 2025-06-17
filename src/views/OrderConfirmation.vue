@@ -19,11 +19,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import type { Order } from '@/types/order';
 import axios from 'axios'
 
 const route = useRoute()
 const orderId = route.params.id
-const order = ref<any>(null)
+const order = ref<Order | null>(null)
 
 onMounted(async () => {
   try {
