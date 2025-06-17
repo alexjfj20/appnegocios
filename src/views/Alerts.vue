@@ -80,7 +80,7 @@
                 v-if="!alert.is_read"
                 variant="secondary"
                 size="sm"
-                @click="markAsRead(alert.id)"
+                @click="markAsRead(Number(alert.id))"
               >
                 Marcar como Leída
               </Button>

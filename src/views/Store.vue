@@ -159,7 +159,6 @@ const addToCart = (product: Product) => {
   cart.addItem({
     id: product.id,
     name: product.name,
-    description: product.description,
     price: product.price,
     imageUrl: product.imageUrl || '',
     quantity: 1
