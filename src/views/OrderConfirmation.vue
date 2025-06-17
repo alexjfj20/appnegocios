@@ -6,7 +6,7 @@
       <p class="text-gray-600 mb-4">Tu pedido ha sido procesado correctamente.</p>
       <div class="border-t border-b py-4 my-4">
         <p class="font-semibold">Número de Pedido: #{{ orderId }}</p>
-        <p class="text-primary font-bold mt-2">Total: ${{ order?.total }}</p>
+        <p class="text-primary font-bold mt-2">Total: ${{ order?.total || 0 }}</p>
       </div>
       <div class="space-y-2">
         <router-link to="/orders" class="btn btn-outline w-full">Ver Mis Pedidos</router-link>
@@ -23,7 +23,7 @@ import axios from 'axios'
 
 const route = useRoute()
 const orderId = route.params.id
-const order = ref(null)
+const order = ref<any>(null)
 
 onMounted(async () => {
   try {

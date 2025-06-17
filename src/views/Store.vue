@@ -120,17 +120,17 @@ const products = ref<Product[]>([])
 const search = ref('')
 const category = ref('')
 const showCart = ref(false)
-const categories = ref([])
+const categories = ref<string[]>([])
 
 const whatsappLink = computed(() => {
   return `https://wa.me/${store.value.whatsapp}?text=Hola, me gustaría hacer una consulta sobre tus productos.`
 })
 
 const filteredProducts = computed(() => {
-  return products.value.filter(product => {
+  return products.value.filter((product: Product) => {
     const matchesSearch = product.name.toLowerCase().includes(search.value.toLowerCase()) ||
                          product.description.toLowerCase().includes(search.value.toLowerCase())
-    const matchesCategory = !category.value || product.category === category.value
+    const matchesCategory = !category.value || product.category_id === category.value
     return matchesSearch && matchesCategory
   })
 })
@@ -144,7 +144,7 @@ onMounted(async () => {
     products.value = productsResponse.data
 
     // Extraer categorías únicas
-    categories.value = [...new Set(products.value.map(p => p.category))]
+    categories.value = [...new Set(products.value.map((p: Product) => p.category_id))]
   } catch (error) {
     console.error('Error al cargar la tienda:', error)
   }
@@ -154,7 +154,7 @@ function filterProducts() {
   // La lógica de filtrado se maneja en el computed filteredProducts
 }
 
-function addToCart(product) {
+function addToCart(product: Product) {
   cart.addItem(product)
   showCart.value = true
 }

@@ -8,7 +8,7 @@
     <!-- Listado de productos -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="product in products" :key="product.id" class="bg-white rounded-lg shadow p-4">
-        <img :src="product.imageUrl" alt="Producto" class="w-full h-40 object-cover rounded-lg mb-4" />
+        <img :src="product.imageUrl || '/placeholder.jpg'" alt="Producto" class="w-full h-40 object-cover rounded-lg mb-4" />
         <h2 class="text-lg font-semibold">{{ product.name }}</h2>
         <p class="text-gray-600">{{ product.description }}</p>
         <p class="text-primary font-bold mt-2">${{ product.price }}</p>
@@ -108,14 +108,34 @@ async function loadProducts() {
 
 function openCreateModal() {
   isEditing.value = false
-  form.value = { name: '', description: '', price: 0, stock: 0, min_stock: 5, category_id: '', sku: '', is_active: true, imageUrl: '' }
+  form.value = { 
+    name: '', 
+    description: '', 
+    price: 0, 
+    stock: 0, 
+    min_stock: 5, 
+    category_id: '', 
+    sku: '', 
+    is_active: true, 
+    imageUrl: '' 
+  }
   showModal.value = true
 }
 
 function openEditModal(product: Product) {
   isEditing.value = true
   currentProduct.value = product
-  form.value = { ...product }
+  form.value = { 
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    stock: product.stock,
+    min_stock: product.min_stock,
+    category_id: product.category_id,
+    sku: product.sku,
+    is_active: product.is_active,
+    imageUrl: product.imageUrl || '',
+  }
   showModal.value = true
 }
 
@@ -126,7 +146,17 @@ function openDeleteModal(product: Product) {
 
 function closeModal() {
   showModal.value = false
-  form.value = { name: '', description: '', price: 0, stock: 0, min_stock: 5, category_id: '', sku: '', is_active: true, imageUrl: '' }
+  form.value = { 
+    name: '', 
+    description: '', 
+    price: 0, 
+    stock: 0, 
+    min_stock: 5, 
+    category_id: '', 
+    sku: '', 
+    is_active: true, 
+    imageUrl: '' 
+  }
 }
 
 function closeDeleteModal() {
@@ -143,10 +173,8 @@ function onFileChange(e: Event) {
 }
 
 async function saveProduct() {
-  if (isEditing.value) {
-    if (currentProduct.value) {
-      await productStore.updateProduct(currentProduct.value.id, form.value)
-    }
+  if (isEditing.value && currentProduct.value) {
+    await productStore.updateProduct(currentProduct.value.id, form.value)
   } else {
     await productStore.createProduct(form.value)
   }

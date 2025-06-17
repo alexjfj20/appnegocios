@@ -15,6 +15,7 @@
           :key="notification.id"
           :type="notification.type"
           :title="notification.message"
+          :model-value="true"
           @close="removeNotification(notification.id)"
         />
       </TransitionGroup>

@@ -425,9 +425,8 @@ import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Select from '@/components/ui/Select.vue';
 import Modal from '@/components/ui/Modal.vue';
-import type { Product } from '@/types/product';
+import type { Product, ProductData } from '@/types/product';
 import type { Category, Movement, CategoryForm, MovementForm } from '@/types/inventory';
-import type { ProductForm } from '@/types/product';
 
 const errorStore = useErrorStore();
 
@@ -455,7 +454,7 @@ const showNewCategoryModal = ref(false);
 const showMovementsModal = ref(false);
 
 // Formularios
-const newProduct = ref<ProductForm>({
+const newProduct = ref<ProductData>({
   name: '',
   category_id: '',
   sku: '',
@@ -463,6 +462,7 @@ const newProduct = ref<ProductForm>({
   stock: 0,
   min_stock: 5,
   description: '',
+  is_active: true,
 });
 
 const newCategory = ref<CategoryForm>({
@@ -573,7 +573,17 @@ const saveMovement = async () => {
 
 // Utilidades
 const editProduct = (product: Product) => {
-  newProduct.value = { ...product };
+  newProduct.value = {
+    name: product.name,
+    category_id: product.category_id,
+    sku: product.sku,
+    price: product.price,
+    stock: product.stock,
+    min_stock: product.min_stock,
+    description: product.description,
+    is_active: product.is_active,
+    imageUrl: product.imageUrl,
+  };
   showNewProductModal.value = true;
 };
 

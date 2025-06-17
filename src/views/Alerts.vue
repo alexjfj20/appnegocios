@@ -208,7 +208,7 @@ const handleNewAlert = (event: CustomEvent) => {
 };
 
 // Marcar alertas como leídas
-const markAsRead = async (alertId: string) => {
+const markAsRead = async (alertId: number) => {
   try {
     await api.put(`/inventory/alerts/${alertId}/read`);
     const alert = alerts.value.find((a: any) => a.id === alertId);

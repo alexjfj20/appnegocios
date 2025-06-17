@@ -173,14 +173,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useErrorStore } from '@/stores/error';
-import { useAuthStore } from '@/stores/auth';
 import api from '@/plugins/axios';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Switch from '@/components/ui/Switch.vue';
 
 const errorStore = useErrorStore();
-const authStore = useAuthStore();
 
 // Estado
 const loading = ref(false);
@@ -261,11 +259,4 @@ const verifyPhone = async () => {
 onMounted(() => {
   loadSettings();
 });
-
-// Define la función saveSettings si no existe
-const saveSettings = async () => {
-  loading.value = true;
-  // lógica para guardar configuración
-  loading.value = false;
-};
 </script> 

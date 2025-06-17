@@ -60,9 +60,9 @@
             <button
               type="submit"
               class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              :disabled="loading"
+              :disabled="profileLoading"
             >
-              {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
+              {{ profileLoading ? 'Guardando...' : 'Guardar Cambios' }}
             </button>
           </div>
         </form>
@@ -108,9 +108,9 @@
             <button
               type="submit"
               class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              :disabled="loading"
+              :disabled="passwordLoading"
             >
-              {{ loading ? 'Actualizando...' : 'Actualizar Contraseña' }}
+              {{ passwordLoading ? 'Actualizando...' : 'Actualizar Contraseña' }}
             </button>
           </div>
         </form>
@@ -170,9 +170,9 @@
             <button
               type="submit"
               class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              :disabled="loading"
+              :disabled="preferencesLoading"
             >
-              {{ loading ? 'Guardando...' : 'Guardar Preferencias' }}
+              {{ preferencesLoading ? 'Guardando...' : 'Guardar Preferencias' }}
             </button>
           </div>
         </form>
@@ -188,6 +188,9 @@ import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
 
 const loading = ref(false);
+const profileLoading = ref(false);
+const passwordLoading = ref(false);
+const preferencesLoading = ref(false);
 
 const userInfo = ref({
   name: '',
@@ -242,7 +245,7 @@ const handleAvatarUpload = async (event: Event) => {
 };
 
 const updateProfile = async () => {
-  loading.value = true;
+  profileLoading.value = true;
   try {
     await axios.put('/api/users/profile', {
       name: userInfo.value.name,
@@ -253,7 +256,7 @@ const updateProfile = async () => {
   } catch (error) {
     toast.error('Error al actualizar el perfil');
   } finally {
-    loading.value = false;
+    profileLoading.value = false;
   }
 };
 
@@ -263,7 +266,7 @@ const updatePassword = async () => {
     return;
   }
 
-  loading.value = true;
+  passwordLoading.value = true;
   try {
     await axios.put('/api/users/password', {
       currentPassword: password.value.current,
@@ -274,19 +277,19 @@ const updatePassword = async () => {
   } catch (error) {
     toast.error('Error al actualizar la contraseña');
   } finally {
-    loading.value = false;
+    passwordLoading.value = false;
   }
 };
 
 const updatePreferences = async () => {
-  loading.value = true;
+  preferencesLoading.value = true;
   try {
     await axios.put('/api/users/preferences', preferences.value);
     toast.success('Preferencias actualizadas correctamente');
   } catch (error) {
     toast.error('Error al actualizar las preferencias');
   } finally {
-    loading.value = false;
+    preferencesLoading.value = false;
   }
 };
 </script> 
