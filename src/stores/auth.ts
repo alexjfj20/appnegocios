@@ -1,8 +1,20 @@
 import { defineStore } from 'pinia'
+import type { StoreDefinition } from 'pinia'
 import { ref } from 'vue'
 import { Clerk } from '@clerk/clerk-js'
 
-export const useAuthStore = defineStore('auth', () => {
+interface AuthState {
+  clerk: Clerk | null
+  isAuthenticated: boolean
+  user: any
+}
+
+interface AuthStore extends AuthState {
+  initialize: () => Promise<void>
+  signOut: () => Promise<void>
+}
+
+export const useAuthStore: StoreDefinition<'auth', AuthState, {}, { initialize: () => Promise<void>; signOut: () => Promise<void> }> = defineStore('auth', () => {
   const clerk = ref<Clerk | null>(null)
   const isAuthenticated = ref(false)
   const user = ref<any>(null)
