@@ -132,12 +132,12 @@
                 </label>
                 <div class="flex space-x-4">
                   <Input
+                    id="notification-whatsapp-phone"
                     v-model="settings.whatsapp.phone"
                     type="tel"
                     placeholder="+52 123 456 7890"
                     class="flex-1"
                     @update:modelValue="updateSettings"
-                    id="notification-whatsapp-phone"
                   />
                   <Button
                     variant="secondary"

@@ -235,12 +235,12 @@ const markAllAsRead = async () => {
 
 // Utilidades
 const getAlertTypeLabel = (type: string) => {
-  const mensajes: Record<string, string> = {
-    low_stock: 'Stock Bajo',
-    expiring: 'Por Vencer',
-    system: 'Error del Sistema'
+  const alertTypes: Record<string, string> = {
+    low_stock: 'Bajo stock',
+    expiring: 'Por vencer',
+    system: 'Error del sistema',
   }
-  return mensajes[type] || type
+  return alertTypes[type] || type
 };
 
 const formatDate = (date: string) => {
